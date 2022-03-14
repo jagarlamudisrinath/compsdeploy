@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  compsdb:
+    image: postgres
+    container_name: postgresdb
+    environment:
+      POSTGRES_DB: chat_engine
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - /home/srinath/IdeaProjects/comps/src/main/resources/db/postgres/ddl.sql:/docker-entrypoint-initdb.d/init.sql
+  app:
+    image: sr19thjm/comps:latest
+    container_name: appserver
+    environment:
+      COMPS_DB_URL: compsdb
+      COMPS_DB_USER_NAME: postgres
+      COMPS_DB_PASSWORD: password
+    ports:
+      - "8080:8080"
+    links:
+      - compsdb
+
